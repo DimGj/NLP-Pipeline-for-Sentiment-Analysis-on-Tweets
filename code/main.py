@@ -27,20 +27,17 @@ def LoadTweets():
 def CleanTweets():
 
     Data = LoadTweets()
-    #Data["user_description"] = Data['user_description'].transform(lambda x: x.lower() if isinstance(x,str) else x)
-    #Data.transform(lambda x: x.lower() if isinstance(x,str) else x)
     Data = Data.astype(str).apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
     Data['text'] = Data['text'].str.lower()
-    #tokenizer = nltk.RegexpTokenizer(r"\w+")
-    #User_Description = tokenizer.tokenize(User_Description)
-    #re.sub(combined_pat, '', Data)
+    
     cleaned = []
     elements = list(Data['text'])
     for i in elements:
-        cleanedText = re.sub("[^a-zA-Z0-9]", " ",i)
-        cleaned.append(re.sub(r'^RT[\s]+', '', cleanedText))
+        FlteredText = re.sub('https?://[A-Za-z0-9./]+','',i)
+        FlteredText = re.sub("[^a-zA-Z0-9]", " ",FlteredText)
+        cleaned.append(re.sub(r'^RT[\s]+', '', FlteredText))
     Data['text'] = cleaned
-    print(Data['text'])
+    print(Data['text'][2])
 
 
 CleanTweets()
