@@ -1,5 +1,8 @@
+
+  
 from genericpath import exists
 from operator import truediv
+from pathlib import Path
 import sys
 import os
 import numpy as np
@@ -9,6 +12,7 @@ import nltk
 from nltk.corpus import stopwords
 import re
 import csv
+import sklearn.model_selection
 
 def LoadTweets():
     Data = {}
@@ -40,6 +44,18 @@ def CleanTweets():
         FlteredText = re.sub("[^a-zA-Z0-9]", " ",FlteredText)
         cleaned.append(re.sub(r'^RT[\s]+', '', FlteredText))
     Data['text'] = cleaned
-    print(Data['text'][2])
+    #print(Data['text'][2])
+    return Data
 
-CleanTweets()
+def SplitDataFrame():
+  Data = CleanTweets()
+  Train,Test = sklearn.model_selection.train_test_split(Data,test_size=0.2, random_state=42, shuffle=True)
+
+  train_path = Path(os.getcwd(),'Train.tsv')
+  test_path = Path(os.getcwd(),'Test.tsv')
+
+  Train.to_csv(train_path, sep='\t', index=False)
+  Test.to_csv(test_path, sep='\t', index=False)
+
+
+SplitDataFrame()
