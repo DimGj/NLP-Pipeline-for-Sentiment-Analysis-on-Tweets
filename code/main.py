@@ -29,7 +29,8 @@ def CleanTweets():
     Data = LoadTweets()
     Data = Data.astype(str).apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
     Data['text'] = Data['text'].str.lower()
-    
+    stop  = stopwords.words('english')
+    Data['text'] = Data['text'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
     cleaned = []
     elements = list(Data['text'])
     for i in elements:
@@ -37,7 +38,7 @@ def CleanTweets():
         FlteredText = re.sub("[^a-zA-Z0-9]", " ",FlteredText)
         cleaned.append(re.sub(r'^RT[\s]+', '', FlteredText))
     Data['text'] = cleaned
-    print(Data['text'][2])
+    print(Data['text'][1])
 
 
 CleanTweets()
