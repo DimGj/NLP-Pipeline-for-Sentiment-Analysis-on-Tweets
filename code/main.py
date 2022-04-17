@@ -28,10 +28,8 @@ def CleanTweets():
   #Data["user_description"] = Data['user_description'].transform(lambda x: x.lower() if isinstance(x,str) else x)
  # Data.transform(lambda x: x.lower() if isinstance(x,str) else x)
   Data = Data.astype(str).apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
-  for columns in Data:
-    temp = str(columns)
-    print(temp)
-   # Data[temp].transform(lambda x: x.lower() if isinstance(x,str) else x)
+  for columns in Data.columns:
+    Data[columns] = Data[columns].str.lower()
   #tokenizer = nltk.RegexpTokenizer(r"\w+")
   #User_Description = tokenizer.tokenize(User_Description)
   print(Data)
