@@ -1,27 +1,40 @@
+from genericpath import exists
+from operator import truediv
+import sys
 import os
 import numpy as np
 import pickle
 import pandas as pd
 import nltk
+from nltk.corpus import stopwords
 import csv
-import cleantext
 
 def LoadTweets():
     Data = {}
     Target = "tweets.pkl"
-    if os.path.getsize(Target) > 0 :
+    if exists(Target):
     	with open(Target,"rb") as f:
             unpickler = pickle.Unpickler(f)
             Data = unpickler.load()
-           	#print(Data)
             df  = pd.DataFrame(Data)
-          	#df.astype(str).apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
-            User_Description = df['user_description'].map(lambda x: x.lower() if isinstance(x,str) else x)
-            User_Description = cleantext.clean(User_Description,no_emoji=True)
-            tokenizer = nltk.RegexpTokenizer(r"\w+")
-            User_Description = tokenizer.tokenize(User_Description)
-            print(User_Description)
+            return df
     else:
-        print("Error,file not found")
+      print("Error ,tweets.pkl not found!")
+      exit()
 
-LoadTweets()
+def CleanTweets():
+
+  Data = LoadTweets()
+  #Data["user_description"] = Data['user_description'].transform(lambda x: x.lower() if isinstance(x,str) else x)
+ # Data.transform(lambda x: x.lower() if isinstance(x,str) else x)
+  Data = Data.astype(str).apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
+  for columns in Data:
+    temp = str(columns)
+    print(temp)
+   # Data[temp].transform(lambda x: x.lower() if isinstance(x,str) else x)
+  #tokenizer = nltk.RegexpTokenizer(r"\w+")
+  #User_Description = tokenizer.tokenize(User_Description)
+  print(Data)
+
+
+CleanTweets()
