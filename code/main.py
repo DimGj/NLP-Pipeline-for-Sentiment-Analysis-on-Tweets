@@ -104,13 +104,43 @@ def DataAnalysis_iii():
     Preview = "Most common words in the DataFrame by sentiment"
     CreatePlot(ExplodeData,Colors,MostCommonValues,MostCommonStr,SentimentArray,Preview)
 
+def DataAnalysis_iv():
+    Data = CleanTweets()
+    SentimentValues = []
+    SentimentStr = []
+    Astra = Data.loc[Data["text"].str.contains("astrazeneca",case=True)]
+    Pfizer = Data.loc[Data["text"].str.contains(pat = "astrazeneca|pfizer|biontech",case=True)]
+    AstraNeg = Astra.groupby('sentiment').get_group("NEG")
+    AstraPos = Astra.groupby('sentiment').get_group("POS")
+    AstraNeu = Astra.groupby('sentiment').get_group("NEU")
+    SentimentValues.append(len(AstraNeg))
+    SentimentValues.append(len(AstraNeu))
+    SentimentValues.append(len(AstraPos))
+    SentimentStr.append("Astra NEG")
+    SentimentStr.append("Astra NEU")
+    SentimentStr.append("Astra POS")
+    PfizerNeg = Pfizer.groupby('sentiment').get_group("NEG")
+    PfizerPos = Pfizer.groupby('sentiment').get_group("POS")
+    PfizerNeu = Pfizer.groupby('sentiment').get_group("NEU")
+    SentimentValues.append(len(PfizerNeg))
+    SentimentValues.append(len(PfizerNeu))
+    SentimentValues.append(len(PfizerPos))
+    SentimentStr.append("Pfizer NEG")
+    SentimentStr.append("Pfizer NEU")
+    SentimentStr.append("Pfizer POS")
+    Colors = ("orange","orange","orange","yellow","yellow","yellow")
+    ExplodeData = (0.1,0.1,0.1,0.2,0.2,0.2)
+    SentimentArray = ["Astra is orange","Pfizer etc. is yellow"]
+    Preview = "Sentiment Comparison between Astrazeneca tweets and Pfizer etc"
+    CreatePlot(ExplodeData,Colors,SentimentValues,SentimentStr,SentimentArray,Preview)
+
 def CreatePlot(ExplodeData,Colors,Values,StrArray,LegendPreview,LegendTitle):
     Fig,Ax = plt.subplots(figsize=(10,7))
     WedgeProperties = { 'linewidth' : 1, 'edgecolor' : "green" }
     wedges,texts,autotexts = Ax.pie(Values,autopct=lambda pct: autocpt(pct, Values),
                                     explode=ExplodeData,labels=StrArray,shadow=True,
                                     colors=Colors,startangle=90,wedgeprops=WedgeProperties,
-                                    textprops=dict(color = "magenta"))
+                                    textprops=dict(color = "black"))
     Ax.legend(wedges,LegendPreview,title = "Legend",loc = "center left",
               bbox_to_anchor = (1,0,0.5,1))
     plt.setp(autotexts,size = 7,weight = "bold")
@@ -135,5 +165,5 @@ def autocpt(pct,allvalues):
 
 
 
-DataAnalysis_ii()
+DataAnalysis_iv()
 #SplitDataFrame()
