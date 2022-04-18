@@ -61,32 +61,61 @@ def SplitDataFrame():
   Train.to_csv(train_path, sep='\t', index=False)
   Test.to_csv(test_path, sep='\t', index=False)
 
-def DataAnalysis():
+def DataAnalysis_ii():
     Data = CleanTweets()
     MostCommon = Counter(" ".join(Data["text"]).split()).most_common(10)
-    ExplodeData = (0.1, 0.0, 0.2, 0.3, 0.0, 0.0, 0.3,0.6, 0.4 ,0.0)
-    Colors = ( "orange", "cyan", "brown",
-          "grey", "indigo", "beige","black","red","pink","blue")
-    WedgeProperties = { 'linewidth' : 1, 'edgecolor' : "green" }
     MostCommonStr = []
     MostCommonValues = []
     MostCommonStr,MostCommonValues = SplitTuple(MostCommon)
-    Fig,Ax = plt.subplots(figsize=(10,7))
-    wedges,texts,autotexts = Ax.pie(MostCommonValues,autopct=lambda pct: autocpt(pct, MostCommonValues),
-                                    explode=ExplodeData,labels=MostCommonStr,shadow=True,
-                                    colors=Colors,startangle=90,wedgeprops=WedgeProperties,
-                                    textprops=dict(color = "magenta"))
-    Ax.legend(wedges,MostCommonStr,title = "Legend",loc = "center left",
-              bbox_to_anchor = (1,0,0.5,1))
-    plt.setp(autotexts,size = 7,weight = "bold")
-    Ax.set_title("Most common words in the DataFrame")
-    plt.show()
+    ExplodeData = (0.1, 0.0, 0.2, 0.3, 0.0, 0.0, 0.3,0.6, 0.4 ,0.0)
+    Colors = ( "orange", "cyan", "brown",
+          "grey", "indigo", "beige","black","red","pink","blue")
+    Preview = "Most common words in the DataFrame"
+    CreatePlot(ExplodeData,Colors,MostCommonValues,MostCommonStr,MostCommonStr,Preview)
+
+def DataAnalysis_iii():
+    Data = CleanTweets()
+    MostCommonStr = []
+    MostCommonValues = [] 
     Neg = Data.groupby('sentiment').get_group("NEG")
     Pos = Data.groupby('sentiment').get_group("POS")
     Neu = Data.groupby('sentiment').get_group("NEU")
     MostCommonNeg = Counter(" ".join(Neg["text"]).split()).most_common(3)
     MostCommonPos = Counter(" ".join(Pos["text"]).split()).most_common(3)
     MostCommonNeu = Counter(" ".join(Neu["text"]).split()).most_common(3)
+    MostCommonNegStr,MostCommonNegValues = SplitTuple(MostCommonNeg)
+    MostCommonPosStr,MostCommonPosValues = SplitTuple(MostCommonPos)
+    MostCommonNeuStr,MostCommonNeuValues = SplitTuple(MostCommonNeu)
+    for items in MostCommonNegStr:
+        MostCommonStr.append(items)
+    for items in MostCommonNegValues:
+        MostCommonValues.append(items)
+    for items in MostCommonPosStr:
+        MostCommonStr.append(items)
+    for items in MostCommonPosValues:
+        MostCommonValues.append(items)
+    for items in MostCommonNeuStr:
+        MostCommonStr.append(items)
+    for items in MostCommonNeuValues:
+        MostCommonValues.append(items)
+    SentimentArray = ["NEG is orange","POS is cyan","NEU is brown"]
+    ExplodeData = (0.1,0.1,0.1, 0.0,0.0,0.0, 0.2,0.2,0.2)
+    Colors = ( "orange","orange","orange", "cyan","cyan","cyan","brown","brown","brown")
+    Preview = "Most common words in the DataFrame by sentiment"
+    CreatePlot(ExplodeData,Colors,MostCommonValues,MostCommonStr,SentimentArray,Preview)
+
+def CreatePlot(ExplodeData,Colors,Values,StrArray,LegendPreview,LegendTitle):
+    Fig,Ax = plt.subplots(figsize=(10,7))
+    WedgeProperties = { 'linewidth' : 1, 'edgecolor' : "green" }
+    wedges,texts,autotexts = Ax.pie(Values,autopct=lambda pct: autocpt(pct, Values),
+                                    explode=ExplodeData,labels=StrArray,shadow=True,
+                                    colors=Colors,startangle=90,wedgeprops=WedgeProperties,
+                                    textprops=dict(color = "magenta"))
+    Ax.legend(wedges,LegendPreview,title = "Legend",loc = "center left",
+              bbox_to_anchor = (1,0,0.5,1))
+    plt.setp(autotexts,size = 7,weight = "bold")
+    Ax.set_title(LegendTitle)
+    plt.show()
 
 def SplitTuple(TupleArray):
     TupleStr = []
@@ -106,5 +135,5 @@ def autocpt(pct,allvalues):
 
 
 
-DataAnalysis()
+DataAnalysis_ii()
 #SplitDataFrame()
