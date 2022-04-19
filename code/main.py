@@ -1,6 +1,6 @@
 from ast import Load
 from genericpath import exists
-from operator import truediv
+from operator import pos, truediv
 from pathlib import Path
 import sys
 import os
@@ -16,6 +16,7 @@ import csv
 import sklearn.model_selection
 from collections import Counter
 from matplotlib import pyplot as plt
+import urllib.request
 
 def LoadTweets():
     Data = {}
@@ -60,6 +61,24 @@ def SplitDataFrame():
 
   Train.to_csv(train_path, sep='\t', index=False)
   Test.to_csv(test_path, sep='\t', index=False)
+
+def DataAnalysis_i():
+    Data =  CleanTweets()
+    Neg = Data.groupby('sentiment').get_group("NEG")
+    Pos = Data.groupby('sentiment').get_group("POS")
+    Neu = Data.groupby('sentiment').get_group("NEU")
+    DataStr = []
+    DataValues = []
+    DataStr.append("NEG")
+    DataStr.append("POS")
+    DataStr.append("NEU")
+    DataValues.append(len(Neg))
+    DataValues.append(len(Pos))
+    DataValues.append(len(Neu))
+    ExplodeData = (0.1, 0.0, 0.2)
+    Colors = ( "orange", "cyan", "brown")
+    Preview = "Distribution of sentiments in the tweets"
+    CreatePlot(ExplodeData,Colors,DataValues,DataStr,DataStr,Preview)
 
 def DataAnalysis_ii():
     Data = CleanTweets()
@@ -134,6 +153,26 @@ def DataAnalysis_iv():
     Preview = "Sentiment Comparison between Astrazeneca tweets and Pfizer etc"
     CreatePlot(ExplodeData,Colors,SentimentValues,SentimentStr,SentimentArray,Preview)
 
+def DataAnalysis_v():
+    Data = CleanTweets()
+    Data['month'] = pd.DatetimeIndex(Data['date']).month
+    ExplodeData = (0.1, 0.0, 0.2, 0.3, 0.0, 0.0, 0.1,0.2, 0.2 ,0.0,0.2,0.3)
+    Colors = ( "orange", "cyan", "brown",
+          "grey", "indigo", "beige","purple","red","pink","blue","yellow","green")
+    Preview = "Tweets per month"
+    Date = [dict() for i in range(12)]
+    DateStr = ["Jan","Feb","March","April","May","June","July","Aug","Sept","Oct","Nov","Dec"]
+    DateValues = []
+    for i in range(1,13):
+        Date[i - 1] = Data.groupby('month').get_group(i)
+        DateValues.append(len(Date[i - 1]))
+    CreatePlot(ExplodeData,Colors,DateValues,DateStr,DateStr,Preview)
+    AverageTweets = int(len(Data)/12)
+    ImportantMonths = []
+    for i in range(1,13):
+        if DateValues[i - 1] > AverageTweets:
+            ImportantMonths.append(i)
+
 def CreatePlot(ExplodeData,Colors,Values,StrArray,LegendPreview,LegendTitle):
     Fig,Ax = plt.subplots(figsize=(10,7))
     WedgeProperties = { 'linewidth' : 1, 'edgecolor' : "green" }
@@ -162,8 +201,10 @@ def autocpt(pct,allvalues):
     absolute = int(pct / 100.*np.sum(allvalues))
     return "{:.1f}%\n({:d} g)".format(pct, absolute)
 
+def PrintDataFrame():
+    Data = CleanTweets()
+    print(Data)
 
-
-
-DataAnalysis_iv()
+#PrintDataFrame()
+DataAnalysis_v()
 #SplitDataFrame()
