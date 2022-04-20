@@ -124,4 +124,8 @@ def CreatePlot(ExplodeData,Colors,Values,StrArray,LegendPreview,LegendTitle):
     Ax.set_title(LegendTitle)
     main.plt.show()
 
+def autocpt(pct,allvalues):
+    absolute = int(pct / 100.*main.np.sum(allvalues))
+    return "{:.1f}%\n({:d} g)".format(pct, absolute)
+
 DataAnalysis_iv()

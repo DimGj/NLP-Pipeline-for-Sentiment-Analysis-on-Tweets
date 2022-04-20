@@ -89,10 +89,6 @@ def SplitTuple(TupleArray):
                 TupleValues.append(moreitems)
     return TupleStr,TupleValues
 
-def autocpt(pct,allvalues):
-    absolute = int(pct / 100.*np.sum(allvalues))
-    return "{:.1f}%\n({:d} g)".format(pct, absolute)
-
 def PrintDataFrame():
     Data = CleanTweets()
     print(Data)
