@@ -14,7 +14,7 @@ def DataAnalysis_i():
     DataValues.append(len(Pos))
     DataValues.append(len(Neu))
     ExplodeData = (0.1, 0.0, 0.2)
-    Colors = ( "orange", "cyan", "brown")
+    Colors = ( "brown", "cyan", "orange")
     Preview = "Distribution of sentiments in the tweets"
     CreatePlot(ExplodeData,Colors,DataValues,DataStr,DataStr,Preview)
 
@@ -24,9 +24,9 @@ def DataAnalysis_ii():
     MostCommonStr = []
     MostCommonValues = []
     MostCommonStr,MostCommonValues = main.SplitTuple(MostCommon)
-    ExplodeData = (0.1, 0.0, 0.2, 0.3, 0.0, 0.0, 0.3,0.6, 0.4 ,0.0)
+    ExplodeData = (0.1, 0.15, 0.2, 0.3, 0.05, 0.25, 0.3,0.4, 0.4 ,0.0)
     Colors = ( "orange", "cyan", "brown",
-          "grey", "indigo", "beige","black","red","pink","blue")
+          "grey", "indigo", "beige","yellow","red","pink","blue")
     Preview = "Most common words in the DataFrame"
     CreatePlot(ExplodeData,Colors,MostCommonValues,MostCommonStr,MostCommonStr,Preview)
 
@@ -55,11 +55,11 @@ def DataAnalysis_iii():
         MostCommonStr.append(items)
     for items in MostCommonNeuValues:
         MostCommonValues.append(items)
-    SentimentArray = ["NEG is orange","POS is cyan","NEU is brown"]
+    SentimentArray = ["NEG is brown","POS is cyan","NEU is orange"]
     ExplodeData = (0.1,0.1,0.1, 0.0,0.0,0.0, 0.2,0.2,0.2)
-    Colors = ( "orange","orange","orange", "cyan","cyan","cyan","brown","brown","brown")
+    Colors = ( "brown","brown","brown","cyan","cyan","cyan","orange","orange","orange",)
     Preview = "Most common words in the DataFrame by sentiment"
-    CreatePlot(ExplodeData,Colors,MostCommonValues,MostCommonStr,SentimentArray,Preview)
+    CreatePlot(ExplodeData,Colors,MostCommonValues,MostCommonStr,SentimentArray,Preview)    #legend not implemented right!
 
 def DataAnalysis_iv():
     Data = main.CleanTweets()
@@ -89,7 +89,7 @@ def DataAnalysis_iv():
     ExplodeData = (0.1,0.1,0.1,0.2,0.2,0.2)
     SentimentArray = ["Astra is orange","Pfizer etc. is yellow"]
     Preview = "Sentiment Comparison between Astrazeneca tweets and Pfizer etc"
-    CreatePlot(ExplodeData,Colors,SentimentValues,SentimentStr,SentimentArray,Preview)
+    CreatePlot(ExplodeData,Colors,SentimentValues,SentimentStr,SentimentArray,Preview)  #legend not implemented right!
 
 def DataAnalysis_v():
     Data = main.CleanTweets()
@@ -114,7 +114,7 @@ def DataAnalysis_v():
 def CreatePlot(ExplodeData,Colors,Values,StrArray,LegendPreview,LegendTitle):
     Fig,Ax = main.plt.subplots(figsize=(10,7))
     WedgeProperties = { 'linewidth' : 1, 'edgecolor' : "green" }
-    wedges,texts,autotexts = Ax.pie(Values,autopct=lambda pct: main.autocpt(pct, Values),
+    wedges,texts,autotexts = Ax.pie(Values,autopct=lambda pct: autocpt(pct, Values),
                                     explode=ExplodeData,labels=StrArray,shadow=True,
                                     colors=Colors,startangle=90,wedgeprops=WedgeProperties,
                                     textprops=dict(color = "black"))
@@ -125,7 +125,7 @@ def CreatePlot(ExplodeData,Colors,Values,StrArray,LegendPreview,LegendTitle):
     main.plt.show()
 
 def autocpt(pct,allvalues):
-    absolute = int(pct / 100.*main.np.sum(allvalues))
+    absolute = int(pct / 100.*sum(allvalues))
     return "{:.1f}%\n({:d} g)".format(pct, absolute)
 
-DataAnalysis_iv()
+DataAnalysis_v()
