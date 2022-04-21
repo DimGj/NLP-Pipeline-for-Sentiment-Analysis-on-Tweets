@@ -54,8 +54,9 @@ def CleanTweets():
     #print(Data['text'][2])
     return Data
 
+Data = CleanTweets()
+
 def SplitDataFrame():
-  Data = CleanTweets()
   Train,Test = sklearn.model_selection.train_test_split(Data,test_size=0.2, random_state=42, shuffle=True)
   del Test['sentiment']
 
@@ -90,10 +91,10 @@ def SplitTuple(TupleArray):
     return TupleStr,TupleValues
 
 def PrintDataFrame():
-    Data = CleanTweets()
-    print(Data)
+    for items in Data:
+        print(items)
 
-BagOfWords()
-#PrintDataFrame()
+#BagOfWords()
+PrintDataFrame()
 #DataAnalysis_v()
 #SplitDataFrame()

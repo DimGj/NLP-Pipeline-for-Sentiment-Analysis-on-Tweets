@@ -1,10 +1,9 @@
 import main
 
 def DataAnalysis_i():
-    Data =  main.CleanTweets()
-    Neg = Data.groupby('sentiment').get_group("NEG")
-    Pos = Data.groupby('sentiment').get_group("POS")
-    Neu = Data.groupby('sentiment').get_group("NEU")
+    Neg = main.Data.groupby('sentiment').get_group("NEG")
+    Pos = main.Data.groupby('sentiment').get_group("POS")
+    Neu = main.Data.groupby('sentiment').get_group("NEU")
     DataStr = []
     DataValues = []
     DataStr.append("NEG")
@@ -19,8 +18,7 @@ def DataAnalysis_i():
     CreatePlot(ExplodeData,Colors,DataValues,DataStr,DataStr,Preview)
 
 def DataAnalysis_ii():
-    Data = main.CleanTweets()
-    MostCommon = main.Counter(" ".join(Data["text"]).split()).most_common(10)
+    MostCommon = main.Counter(" ".join(main.Data["text"]).split()).most_common(10)
     MostCommonStr = []
     MostCommonValues = []
     MostCommonStr,MostCommonValues = main.SplitTuple(MostCommon)
@@ -31,12 +29,11 @@ def DataAnalysis_ii():
     CreatePlot(ExplodeData,Colors,MostCommonValues,MostCommonStr,MostCommonStr,Preview)
 
 def DataAnalysis_iii():
-    Data = main.CleanTweets()
     MostCommonStr = []
     MostCommonValues = [] 
-    Neg = Data.groupby('sentiment').get_group("NEG")
-    Pos = Data.groupby('sentiment').get_group("POS")
-    Neu = Data.groupby('sentiment').get_group("NEU")
+    Neg = main.Data.groupby('sentiment').get_group("NEG")
+    Pos = main.Data.groupby('sentiment').get_group("POS")
+    Neu = main.Data.groupby('sentiment').get_group("NEU")
     MostCommonNeg = main.Counter(" ".join(Neg["text"]).split()).most_common(3)
     MostCommonPos = main.Counter(" ".join(Pos["text"]).split()).most_common(3)
     MostCommonNeu = main.Counter(" ".join(Neu["text"]).split()).most_common(3)
@@ -62,11 +59,10 @@ def DataAnalysis_iii():
     CreatePlot(ExplodeData,Colors,MostCommonValues,MostCommonStr,SentimentArray,Preview)    #legend not implemented right!
 
 def DataAnalysis_iv():
-    Data = main.CleanTweets()
     SentimentValues = []
     SentimentStr = []
-    Astra = Data.loc[Data["text"].str.contains("astrazeneca",case=True)]
-    Pfizer = Data.loc[Data["text"].str.contains(pat = "astrazeneca|pfizer|biontech",case=True)]
+    Astra = main.Data.loc[main.Data["text"].str.contains("astrazeneca",case=True)]
+    Pfizer = main.Data.loc[main.Data["text"].str.contains(pat = "astrazeneca|pfizer|biontech",case=True)]
     AstraNeg = Astra.groupby('sentiment').get_group("NEG")
     AstraPos = Astra.groupby('sentiment').get_group("POS")
     AstraNeu = Astra.groupby('sentiment').get_group("NEU")
@@ -93,8 +89,7 @@ def DataAnalysis_iv():
     CreatePlot(ExplodeData,Colors,SentimentValues,SentimentStr,SentimentArray,Preview)
 
 def DataAnalysis_v():
-    Data = main.CleanTweets()
-    Data['month'] = main.pd.DatetimeIndex(Data['date']).month
+    main.Data['month'] = main.pd.DatetimeIndex(main.Data['date']).month
     ExplodeData = (0.1, 0.0, 0.2, 0.3, 0.0, 0.0, 0.1,0.2, 0.2 ,0.0,0.2,0.3)
     Colors = ( "orange", "cyan", "brown",
           "grey", "indigo", "beige","purple","red","pink","blue","yellow","green")
@@ -103,26 +98,27 @@ def DataAnalysis_v():
     DateStr = ["Jan","Feb","March","April","May","June","July","Aug","Sept","Oct","Nov","Dec"]
     DateValues = []
     for i in range(1,13):
-        Date[i - 1] = Data.groupby('month').get_group(i)
+        Date[i - 1] = main.Data.groupby('month').get_group(i)
         DateValues.append(len(Date[i - 1]))
     CreatePlot(ExplodeData,Colors,DateValues,DateStr,DateStr,Preview)
-    AverageTweets = int(len(Data)/12)
+    AverageTweets = int(len(main.Data)/12)
     ImportantMonths = []
     for i in range(1,13):
         if DateValues[i - 1] > AverageTweets:
             ImportantMonths.append(i)
 
 def CreatePlot(ExplodeData,Colors,Values,StrArray,LegendPreview,LegendTitle):
-    Fig,Ax = main.plt.subplots(figsize=(10,7))
+    Fig,Ax = main.plt.subplots(figsize=(12,9))
     WedgeProperties = { 'linewidth' : 1, 'edgecolor' : "green" }
     wedges,texts,autotexts = Ax.pie(Values,autopct=lambda pct: autocpt(pct, Values),
                                     explode=ExplodeData,labels=StrArray,shadow=True,
                                     colors=Colors,startangle=90,wedgeprops=WedgeProperties,
                                     textprops=dict(color = "black"))
-    Ax.legend(wedges,LegendPreview,title = "Legend",loc = "center left",
+    Ax.legend(wedges,LegendPreview,title = "Legend",loc= 'right',
               bbox_to_anchor = (1,0,0.5,1))
     main.plt.setp(autotexts,size = 7,weight = "bold")
-    Ax.set_title(LegendTitle)
+    main.plt.title(LegendTitle,y=1.08)
+    #Ax.set_title(LegendTitle)
     main.plt.show()
 
 def autocpt(pct,allvalues):
