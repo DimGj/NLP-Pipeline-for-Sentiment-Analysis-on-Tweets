@@ -1,16 +1,26 @@
 import imports
 import FileHandlers
 
-def BagOfWords(Data):
+def BagOfWords():
     from sklearn.feature_extraction.text import CountVectorizer
+    Train = FileHandlers.OpenFile("../TSVFiles/Train.tsv")
+    Test = FileHandlers.OpenFile("../TSVFiles/Test.tsv")
     vectorizer = CountVectorizer(max_df=1.0, min_df=1, max_features=1000,stop_words='english')
-    vector = vectorizer.fit_transform(Data['text'])
-    df_bow_sklearn = imports.pd.DataFrame(vector.toarray(),columns=vectorizer.get_feature_names_out())
-    FileHandlers.SaveFile(df_bow_sklearn,'../PickleFiles/bagofwords.pkl')
+    TrainVector = vectorizer.fit_transform(Train['text'])
+    TestVector = vectorizer.transform(Test['text'])
+    dfTrain_bow_sklearn = imports.pd.DataFrame(TrainVector.toarray(),columns=vectorizer.get_feature_names_out())
+    dfTest_bow_sklearn = imports.pd.DataFrame(TestVector.toarray(),columns=vectorizer.get_feature_names_out())
+    FileHandlers.SaveFile(dfTrain_bow_sklearn,'../PickleFiles/bagofwordsTrain.pkl')
+    FileHandlers.SaveFile(dfTest_bow_sklearn,'../PickleFiles/bagofwordsTest.pkl')
 
-def TF_IDF(Data):
+def TF_IDF():
     from sklearn.feature_extraction.text import TfidfVectorizer
+    Train = FileHandlers.OpenFile("../TSVFiles/Train.tsv")
+    Test = FileHandlers.OpenFile("../TSVFiles/Test.tsv")
     tfidf_vectorizer = TfidfVectorizer(max_df=1.0, min_df=1, max_features=1000,stop_words='english')
-    tfidf_vector = tfidf_vectorizer.fit_transform(Data['text'])
-    tfidf_df = imports.pd.DataFrame(tfidf_vector.toarray(),columns=tfidf_vectorizer.get_feature_names_out())
-    FileHandlers.SaveFile(tfidf_df,'../PickleFiles/TF-IDF.pkl')
+    tfidfTrain_vector = tfidf_vectorizer.fit_transform(Train['text'])
+    tfidfTest_vector = tfidf_vectorizer.transform(Test['text'])
+    tfidfTrain_df = imports.pd.DataFrame(tfidfTrain_vector.toarray(),columns=tfidf_vectorizer.get_feature_names_out())
+    tfidfTest_df = imports.pd.DataFrame(tfidfTest_vector.toarray(),columns=tfidf_vectorizer.get_feature_names_out())
+    FileHandlers.SaveFile(tfidfTrain_df,'../PickleFiles/TF-IDFTrain.pkl')
+    FileHandlers.SaveFile(tfidfTest_df,'../PickleFiles/TF-IDFTest.pkl')

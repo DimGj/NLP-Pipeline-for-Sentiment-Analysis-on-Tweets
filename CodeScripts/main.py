@@ -25,12 +25,13 @@ def PrintDataFrame():
     print(Data)
 
 Data = CleanTweets()
-#VectorizationTweets.TF_IDF(Data)
-#VectorizationTweets.BagOfWords(Data)
+
+FileHandlers.SplitDataFrame(Data)
+VectorizationTweets.TF_IDF()
+VectorizationTweets.BagOfWords()
 #PrintDataFrame()
 #DataAnalysis.DataAnalysis_i(Data)
 #DataAnalysis.DataAnalysis_ii(Data)
 #DataAnalysis.DataAnalysis_iii(Data)
 #DataAnalysis.DataAnalysis_iv(Data)
 #DataAnalysis.DataAnalysis_v(Data)
-FileHandlers.SplitDataFrame(Data)
