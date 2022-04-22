@@ -18,3 +18,4 @@ import csv
 import sklearn.model_selection
 from collections import Counter
 from matplotlib import pyplot as plt
+import gensim
