@@ -21,6 +21,10 @@ from matplotlib import pyplot as plt
 import urllib.request
 from sklearn.feature_extraction.text import CountVectorizer
 
+
+import data_analysis
+import VectorizationTweets
+
 def LoadFile(Filename):
     Data = {}
     if exists(Filename):
@@ -110,7 +114,7 @@ def SplitTuple(TupleArray):
 def PrintDataFrame():
     print(Data)
 
-TF_IDF()
+VectorizationTweets.TF_IDF()
 #BagOfWords()
 #PrintDataFrame()
 #DataAnalysis_v()
