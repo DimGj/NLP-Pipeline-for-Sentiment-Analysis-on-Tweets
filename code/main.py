@@ -21,26 +21,22 @@ from matplotlib import pyplot as plt
 import urllib.request
 from sklearn.feature_extraction.text import CountVectorizer
 
-import data_analysis
-import VectorizationTweets
-
-def LoadTweets():
+def LoadFile(Filename):
     Data = {}
-    Target = "../tweets/tweets.pkl"
-    if exists(Target):
-    	with open(Target,"rb") as f:
+    if exists(Filename):
+        with open(Filename,'rb') as f:
             unpickler = pickle.Unpickler(f)
             Data = unpickler.load()
-            df  = pd.DataFrame(Data)
+            df = pd.DataFrame(Data)
             f.close()
             return df
     else:
-        print("Error ,tweets.pkl not found!")
+        print("Error file,with directory: ",Filename," not found!")
         exit(1)
 
 def CleanTweets():
 
-    Data = LoadTweets()
+    Data = LoadFile("../tweets/tweets.pkl")
     Data = Data.astype(str).apply(lambda x: x.str.encode('ascii', 'ignore').str.decode('ascii'))
     Data['text'] = Data['text'].str.lower()
     stop  = stopwords.words('english')
@@ -70,6 +66,23 @@ def SplitDataFrame():
   if not exists(test_path):
     Test.to_csv(test_path, sep='\t', index=False)
 
+def BagOfWords():
+    from sklearn.feature_extraction.text import CountVectorizer
+    vectorizer = CountVectorizer(max_df=1.0, min_df=1, max_features=1000,
+    stop_words='english')
+    vector = vectorizer.fit_transform(Data['text'])
+    df_bow_sklearn = pd.DataFrame(vector.toarray(),columns=vectorizer.get_feature_names_out())
+    SaveFile(df_bow_sklearn,'bagofwords.pkl')
+
+def TF_IDF():
+   from sklearn.feature_extraction.text import CountVectorizer
+   from sklearn.feature_extraction.text import TfidfVectorizer
+   tfidf_vectorizer = TfidfVectorizer(max_df=1.0, min_df=1, max_features=1000,
+    stop_words='english')
+   tfidf_vector = tfidf_vectorizer.fit_transform(Data['text'])
+   tfidf_df = pd.DataFrame(tfidf_vector.toarray(),columns=tfidf_vectorizer.get_feature_names_out())
+   SaveFile(tfidf_df,'TF-IDF.pkl')
+
 def SaveFile(DataFrame,Filename):
     if not exists(Filename):
         with open(Filename,'wb') as handle:
@@ -95,10 +108,9 @@ def SplitTuple(TupleArray):
     return TupleStr,TupleValues
 
 def PrintDataFrame():
-    for items in Data:
-        print(items)
+    print(Data)
 
-VectorizationTweets.TF_IDF()
+TF_IDF()
 #BagOfWords()
 #PrintDataFrame()
 #DataAnalysis_v()
