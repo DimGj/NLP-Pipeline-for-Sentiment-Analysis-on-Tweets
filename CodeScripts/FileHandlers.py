@@ -25,7 +25,7 @@ def SplitDataFrame(Data):
   train_path = "../TSVFiles/Train.tsv"
   test_path = "../TSVFiles/Test.tsv"
   Train.to_csv(train_path,sep='\t')
-  Test.to_csv(test_path, sep='\t', index=False)
+  Test.to_csv(test_path, sep='\t')
 
 def SplitTuple(TupleArray):
     TupleStr = []
