@@ -21,6 +21,9 @@ from matplotlib import pyplot as plt
 import urllib.request
 from sklearn.feature_extraction.text import CountVectorizer
 
+import data_analysis
+import VectorizationTweets
+
 def LoadTweets():
     Data = {}
     Target = "../tweets/tweets.pkl"
@@ -95,7 +98,7 @@ def PrintDataFrame():
     for items in Data:
         print(items)
 
-TF_IDF()
+VectorizationTweets.TF_IDF()
 #BagOfWords()
 #PrintDataFrame()
 #DataAnalysis_v()
