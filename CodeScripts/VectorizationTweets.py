@@ -25,11 +25,16 @@ def TF_IDF():
     FileHandlers.SaveFile(tfidfTrain_df,'../PickleFiles/TF-IDFTrain.pkl')
     FileHandlers.SaveFile(tfidfTest_df,'../PickleFiles/TF-IDFTest.pkl')
     
-    def WordEmbeddings():
+
+def WordEmbeddings():
     Train = FileHandlers.OpenFile("../TSVFiles/Train.tsv")
     Test = FileHandlers.OpenFile("../TSVFiles/Test.tsv")
-    tokenized_tweet = Train['text'].apply(lambda x: x.split())
-    model_w2v = imports.gensim.models.Word2Vec(tokenized_tweet,vector_size=200,window=5,min_count=2,sg = 1,hs = 0,negative = 10,workers= 4,seed = 34)
-    model_w2v.train(tokenized_tweet, total_examples= len(Train['text']), epochs=20)
+    tokenized_tweetTrain = Train['text'].apply(lambda x: x.split())
+    tokenized_tweetTest = Test['text'].apply(lambda x: x.split())
+    model_w2vTrain = imports.gensim.models.Word2Vec(tokenized_tweetTrain,vector_size=200,window=5,min_count=2,sg = 1,hs = 0,negative = 10,workers= 10,seed = 34)
+    model_w2vTest = imports.gensim.models.Word2Vec(tokenized_tweetTest,vector_size=200,window=5,min_count=2,sg = 1,hs = 0,negative = 10,workers= 10,seed = 34)
+    model_w2vTrain.train(tokenized_tweetTrain, total_examples= len(Train['text']), epochs=20)
+    model_w2vTest.train(tokenized_tweetTest,total_examples= len(Test['text']), epochs=20)
     #print(model_w2v.wv.most_similar(positive="trump"))
-    model_w2v.save('../PickleFiles/WordEmbeddingsTrain.pkl')
+    model_w2vTrain.save('../PickleFiles/WordEmbeddingsTrain.pkl')
+    model_w2vTest.save('../PickleFiles/WordEmbeddingsTest.pkl')
