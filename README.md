@@ -1,2 +1,6 @@
 # TEDE
-Projects for TEDE lesson (spring '22)
+Project  for Data Mining Techniques course (spring '22)
+
+####################################################################
+
+
